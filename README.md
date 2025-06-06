@@ -1,1 +1,3 @@
-# Multiuser-Calendar
+# Kronos Multiuser-Calendar
+
+Kronos is a web-based calendar platform developed using PHP and MySQL. It allows multiple users to register, log in, and manage their daily schedules through a visually interactive calendar. The core objective was to create an intuitive system that helps users manage their time efficiently with a clean and responsive UI. The platform provides a monthly view of the calendar with clickable days for event addition. It also includes a pre-event notification system to ensure users never miss important tasks or appointments. The system was built with security and scalability in mind, making use of PHP for backend logic and MySQL for data persistence. Outcomes include a working prototype that is responsive, functional, and can be enhanced into a more robust tool with future features like shared calendars.
