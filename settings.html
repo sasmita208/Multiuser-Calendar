@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kronos – Settings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #6a1b9a, #ffffff);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .settings-container {
+      background: #fff;
+      width: 480px;
+      border-radius: 15px;
+      padding: 40px 35px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .settings-header {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #6a1b9a;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .setting-group {
+      margin-bottom: 20px;
+    }
+
+    .setting-group label {
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: block;
+      margin-bottom: 6px;
+      color: #444;
+    }
+
+    .setting-group select {
+      width: 100%;
+      padding: 10px;
+      font-size: 0.95rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #f9f9f9;
+    }
+
+    .button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .sign-out {
+      background-color: #6a1b9a;
+      color: white;
+    }
+
+    .sign-out:hover {
+      background-color: #4a0072;
+    }
+
+    .switch-account {
+      background-color: #9c27b0;
+      color: white;
+    }
+
+    .switch-account:hover {
+      background-color: #7b1fa2;
+    }
+
+    .back-btn {
+      display: block;
+      text-align: center;
+      margin-top: 25px;
+      font-size: 0.95rem;
+      color: #6a1b9a;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .back-btn:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="settings-container">
+    <div class="settings-header">⚙ Settings</div>
+
+    <div class="setting-group">
+      <label for="theme">🎨 Theme</label>
+      <select id="theme">
+        <option value="light">Light</option>
+        <option value="dark" disabled>Dark (coming soon)</option>
+      </select>
+    </div>
+
+    <div class="setting-group">
+      <label for="timezone">🌐 Time Zone</label>
+      <select id="timezone">
+        <option value="IST">IST (UTC+5:30)</option>
+        <option value="UTC">UTC</option>
+        <option value="EST">EST (UTC-5)</option>
+        <option value="PST">PST (UTC-8)</option>
+        <option value="CET">CET (UTC+1)</option>
+      </select>
+    </div>
+
+    <div class="setting-group">
+      <label for="language">🗣 Language</label>
+      <select id="language">
+        <option value="en">English</option>
+        <option value="hi">Hindi</option>
+        <option value="es">Spanish</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+      </select>
+    </div>
+
+    <button class="button sign-out" onclick="signOut()">🚪 Sign Out</button>
+    <button class="button switch-account" onclick="switchAccount()">🔄 Log in to Another Account</button>
+
+    <a href="dashboard.php" class="back-btn">← Back to Dashboard</a>
+  </div>
+
+  <script>
+    // Load saved settings when page loads
+    window.addEventListener('DOMContentLoaded', function() {
+      // Load other settings if needed
+    });
+
+    function signOut() {
+      alert("Signing out...");
+      window.location.href = 'login.html';
+    }
+
+    function switchAccount() {
+      alert("Redirecting to login...");
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>

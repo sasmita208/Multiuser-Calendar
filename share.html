@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Share Calendar - Kronos</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .share-container {
+      background-color: #1e1e1e;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(255, 255, 0, 0.2);
+      width: 350px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #fff;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #ddd;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #444;
+      background-color: #2c2c2c;
+      color: white;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      font-size: 15px;
+      background-color: #FFD700;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #FFC107;
+    }
+  </style>
+</head>
+<body>
+  <div class="share-container">
+    <h2>Share Your Calendar</h2>
+    <form action="share_calendar.php" method="POST">
+      <label for="shared_email">Email of user to share with:</label>
+      <input type="email" name="shared_email" id="shared_email" required>
+
+      <label for="role">Role:</label>
+      <select name="role" id="role" required>
+        <option value="Viewer">Viewer</option>
+        <option value="Editor">Editor</option>
+        <option value="Admin">Admin</option>
+      </select>
+
+      <button type="submit">Share</button>
+    </form>
+  </div>
+</body>
+</html>

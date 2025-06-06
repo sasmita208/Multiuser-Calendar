@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login Page</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #6a1b9a, #ffffff);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-card {
+      background-color: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      width: 300px;
+    }
+
+    .login-card h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #6a1b9a;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      color: #555;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    .eye-btn {
+      position: absolute;
+      right: 10px;
+      top: 35px;
+      background: none;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .forgot-password {
+      text-align: right;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+
+    .forgot-password a {
+      text-decoration: none;
+      font-size: 0.85rem;
+      color: #6a1b9a;
+    }
+
+    .register-link {
+      text-align: center;
+      margin-top: -5px;
+      margin-bottom: 15px;
+      font-size: 0.85rem;
+    }
+
+    .register-link a {
+      color: #6a1b9a;
+      text-decoration: none;
+    }
+
+    .remember-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .remember-container input[type="checkbox"] {
+      display: none;
+    }
+
+    .toggle-label {
+      position: relative;
+      width: 40px;
+      height: 20px;
+      background: #ccc;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .toggle-label::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+
+    input[type="checkbox"]:checked + .toggle-label {
+      background: #4caf50;
+    }
+
+    input[type="checkbox"]:checked + .toggle-label::after {
+      transform: translateX(20px);
+    }
+
+    .remember-text {
+      color: #333;
+      font-size: 0.9rem;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: #6a1b9a;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .login-btn:hover {
+      background: #4a0072;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-card">
+    <h2>Login</h2>
+    <form action="login.php" method="POST">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter email" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter password" required />
+        <button type="button" class="eye-btn" onclick="togglePassword()">👁</button>
+      </div>
+
+      <div class="forgot-password">
+        <a href="reset_password.html">Forgot Password?</a>
+      </div>
+
+      <div class="register-link">
+        <p>Don't have an account? <a href="registration.html">Register here</a></p>
+      </div>
+
+      <div class="remember-container">
+        <input type="checkbox" id="remember" />
+        <label for="remember" class="toggle-label"></label>
+        <span class="remember-text">Remember Me</span>
+      </div>
+
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+  </div>
+
+  <script>
+    function togglePassword() {
+      const passwordField = document.getElementById("password");
+      const type = passwordField.getAttribute("type");
+      passwordField.setAttribute("type", type === "password" ? "text" : "password");
+    }
+  </script>
+
+</body>
+</html>

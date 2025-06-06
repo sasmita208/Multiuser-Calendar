@@ -1,0 +1,79 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #cdb5f5, #e3d5fc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.calendar-container {
+  width: 90%;
+  max-width: 600px;
+  background-color: #e7d9ff;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  font-weight: bold;
+  color: #3d0066;
+}
+
+.calendar-header .month {
+  font-size: 1.5rem;
+}
+
+.calendar-header .nav-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #3d0066;
+}
+
+.calendar-header .brand {
+  font-weight: 600;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.day-label {
+  text-align: center;
+  font-weight: bold;
+  color: white;
+  background-color: #4b007d;
+  border-radius: 8px;
+  padding: 6px 0;
+}
+
+.day {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 10px;
+  height: 65px;
+  position: relative;
+  color: #3d0066;
+  font-weight: bold;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.day .plus {
+  font-size: 1.2rem;
+  color: #6c3cd6;
+  margin-top: 5px;
+  cursor: pointer;
+}

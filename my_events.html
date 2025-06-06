@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Events</title>
+</head>
+<body>
+
+<h2>My Events</h2>
+
+<!-- Display events dynamically -->
+<?php if (empty($events)): ?>
+    <p>No events found.</p>
+<?php else: ?>
+    <ul>
+        <?php foreach ($events as $event): ?>
+            <li>
+                <strong><?php echo htmlspecialchars($event['title']); ?></strong><br>
+                <p><?php echo htmlspecialchars($event['description']); ?></p>
+                <p>Start: <?php echo $event['start_time']; ?> | End: <?php echo $event['end_time']; ?></p>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+
+<!-- Link to dashboard page -->
+<a href="dashboard.php">Go to Dashboard</a>
+
+</body>
+</html>

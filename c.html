@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kronos Calendar</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(to right, #6a1b9a, #ffffff);
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .year {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #3a0e54;
+    }
+    
+    .month-selector {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    
+    .month {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #3a0e54;
+    }
+    
+    .nav-button {
+      background-color: white;
+      border: none;
+      border-radius: 50%;
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      color: #3a0e54;
+      font-size: 1.5rem;
+    }
+    
+    .brand {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #3a0e54;
+    }
+    
+    .weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .weekday {
+      background-color: #3a0e54;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      border-radius: 2rem;
+      font-weight: bold;
+    }
+    
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.5rem;
+    }
+    
+    .calendar-row {
+      display: contents;
+    }
+    
+    .calendar-day {
+      background-color: #f3e5f5;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      min-height: 5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    
+    .date-number {
+      margin-bottom: 0.5rem;
+      font-size: 1.25rem;
+    }
+    
+    .current-month {
+      color: #3a0e54;
+      font-weight: bold;
+    }
+    
+    .other-month {
+      color: #aa8eba;
+    }
+    
+    .add-event {
+      width: 2rem;
+      height: 2rem;
+      background-color: #ce93d8;
+      border: none;
+      border-radius: 50%;
+      color: #3a0e54;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .add-event:hover {
+      background-color: #ba68c8;
+    }
+
+    .event-list {
+      width: 100%;
+      margin-top: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      max-height: 5rem;
+      overflow-y: auto;
+    }
+    
+    .event-item {
+      background-color: #9c27b0;
+      color: white;
+      font-size: 0.7rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      text-align: center;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+    }
+    
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+    
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 450px;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .close-button {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+      z-index: 10;
+      padding: 0;
+      line-height: 1;
+      width: auto;
+      margin-top: 0;
+    }
+    
+    form {
+      color: #333;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      color: #6a1b9a;
+      font-size: 1.5rem;
+    }
+
+    label {
+      margin-top: 10px;
+      display: block;
+      font-size: 0.9rem;
+      color: #444;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 6px 8px;
+      margin-top: 5px;
+      font-size: 0.85rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #f9f9f9;
+      color: #000;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #6a1b9a;
+      color: #fff;
+      font-weight: bold;
+      margin-top: 20px;
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      transition: background 0.3s;
+      font-size: 0.95rem;
+    }
+
+    button[type="submit"]:hover {
+      background: #4a0072;
+    }
+
+    .time-container {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .time-input {
+      flex: 1;
+    }
+    
+    .ampm-select {
+      width: 5rem;
+    }
+    
+    .recurrence-options {
+      display: none;
+      margin-top: 10px;
+    }
+    
+    select {
+      margin-bottom: 10px;
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    /* Event details modal */
+    .event-details {
+      margin-top: 1rem;
+    }
+
+    .event-details p {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .event-detail-label {
+      font-weight: bold;
+      color: #6a1b9a;
+    }
+
+    .event-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .event-actions button {
+      flex: 1;
+      margin-top: 0;
+    }
+
+    .delete-btn {
+      background-color: #e53935;
+    }
+
+    .delete-btn:hover {
+      background-color: #c62828;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="calendar-header">
+      <div class="year" id="current-year">2025</div>
+      <div class="month-selector">
+        <button class="nav-button" id="prev-month">&#9664;</button>
+        <div class="month" id="current-month">July</div>
+        <button class="nav-button" id="next-month">&#9654;</button>
+      </div>
+      <div class="brand">KRONOS</div>
+    </div>
+    
+    <div class="weekdays">
+      <div class="weekday">SUN</div>
+      <div class="weekday">MON</div>
+      <div class="weekday">TUE</div>
+      <div class="weekday">WED</div>
+      <div class="weekday">THU</div>
+      <div class="weekday">FRI</div>
+      <div class="weekday">SAT</div>
+    </div>
+    
+    <div class="calendar-grid" id="calendar-grid">
+      <!-- Calendar days will be generated here by JavaScript -->
+    </div>
+  </div>
+  
+  <!-- Event Creation Modal -->
+  <div class="modal" id="event-modal">
+    <div class="modal-content">
+      <button class="close-button" id="close-modal">&#10005;</button>
+      
+      <form id="event-form">
+        <h2>Create New Event</h2>
+        
+        <input type="hidden" id="selected-date" name="event_date">
+        
+        <div class="form-group">
+          <label>Event Title:</label>
+          <input type="text" name="title" id="event-title" placeholder="Event Title" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Description:</label>
+          <input type="text" name="description" id="event-description" placeholder="Description">
+        </div>
+        
+        <div class="form-group">
+          <label>Date:</label>
+          <input type="date" name="event_date" id="event-date-input" required>
+        </div>
+        
+        <div id="ampm-wrapper">
+          <div class="form-group">
+            <label>Start Time:</label>
+            <div class="time-container">
+              <input type="time" name="start_time" id="event-start-time" class="time-input" required>
+              <select name="start_ampm" class="ampm-select">
+                <option value="AM">AM</option>
+                <option value="PM">PM</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>End Time:</label>
+            <div class="time-container">
+              <input type="time" name="end_time" id="event-end-time" class="time-input" required>
+              <select name="end_ampm" class="ampm-select">
+                <option value="AM">AM</option>
+                <option value="PM">PM</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Reminder (minutes before):</label>
+          <input type="number" name="reminder_minutes_before" id="event-reminder" placeholder="e.g. 15" min="0">
+        </div>
+        
+        <div class="form-group">
+          <label>Is this event recurring?</label>
+          <select name="is_recurring" id="is-recurring">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select>
+        </div>
+        
+        <div class="recurrence-options" id="recurrence-options">
+          <label>Recurrence Rule:</label>
+          <select name="recurrence_rule" id="recurrence-rule">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Invite Users (comma-separated emails):</label>
+          <input type="text" name="invitees" id="event-invitees" placeholder="user1@example.com, user2@example.com">
+        </div>
+        
+        <button type="submit">Create Event</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Event Details Modal -->
+  <div class="modal" id="event-details-modal">
+    <div class="modal-content">
+      <button class="close-button" id="close-details-modal">&#10005;</button>
+      
+      <h2>Event Details</h2>
+      
+      <div class="event-details" id="event-details">
+        <!-- Event details will be populated here -->
+      </div>
+      
+      <div class="event-actions">
+        <button class="edit-btn" id="edit-event-btn">Edit</button>
+        <button class="delete-btn" id="delete-event-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Calendar state
+    let currentYear = new Date().getFullYear();
+    let currentMonth = new Date().getMonth(); // 0-indexed where 0 is January
+    let selectedDate = null;
+    let selectedEvent = null;
+    let events = [];
+    
+    // Month names array
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    
+    // Load events from localStorage
+  function loadEvents() {
+  fetch('c.php')
+    .then(response => response.json())
+    .then(data => {
+      events = data.map(e => {
+        e.date = new Date(e.date);
+        return e;
+      });
+      renderCalendar();
+    })
+    .catch(error => {
+      console.error('Error loading events:', error);
+    });
+}
+
+    
+    // Save events to localStorage
+    function saveEvents() {
+      localStorage.setItem('calendarEvents', JSON.stringify(events));
+    }
+    
+    // Get DOM elements
+    const calendarGrid = document.getElementById('calendar-grid');
+    const currentYearElement = document.getElementById('current-year');
+    const currentMonthElement = document.getElementById('current-month');
+    const prevMonthButton = document.getElementById('prev-month');
+    const nextMonthButton = document.getElementById('next-month');
+    const eventModal = document.getElementById('event-modal');
+    const closeModalButton = document.getElementById('close-modal');
+    const selectedDateInput = document.getElementById('selected-date');
+    const eventDateInput = document.getElementById('event-date-input');
+    const isRecurringSelect = document.getElementById('is-recurring');
+    const recurrenceOptions = document.getElementById('recurrence-options');
+    const eventForm = document.getElementById('event-form');
+    const eventDetailsModal = document.getElementById('event-details-modal');
+    const closeDetailsModalButton = document.getElementById('close-details-modal');
+    const eventDetailsElement = document.getElementById('event-details');
+    const editEventButton = document.getElementById('edit-event-btn');
+    const deleteEventButton = document.getElementById('delete-event-btn');
+    
+    // Helper functions for date calculations
+    function getDaysInMonth(year, month) {
+      return new Date(year, month + 1, 0).getDate();
+    }
+    
+    function getFirstDayOfMonth(year, month) {
+      return new Date(year, month, 1).getDay();
+    }
+    
+    // Format date as YYYY-MM-DD
+    function formatDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+    
+    // Check if dates are the same day
+    function isSameDay(date1, date2) {
+      return date1.getFullYear() === date2.getFullYear() &&
+             date1.getMonth() === date2.getMonth() &&
+             date1.getDate() === date2.getDate();
+    }
+    
+    // Generate and render calendar
+    function renderCalendar() {
+      // Clear existing content
+      calendarGrid.innerHTML = '';
+      
+      // Update header
+      currentYearElement.textContent = currentYear;
+      currentMonthElement.textContent = monthNames[currentMonth];
+      
+      const daysInMonth = getDaysInMonth(currentYear, currentMonth);
+      const firstDay = getFirstDayOfMonth(currentYear, currentMonth);
+      
+      // Get days from previous month
+      const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+      const prevYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+      const daysInPrevMonth = getDaysInMonth(prevYear, prevMonth);
+      
+      // Create array to hold all days to display
+      const days = [];
+      
+      // Previous month days
+      for (let i = firstDay - 1; i >= 0; i--) {
+        days.push({
+          day: daysInPrevMonth - i,
+          currentMonth: false,
+          date: new Date(prevYear, prevMonth, daysInPrevMonth - i)
+        });
+      }
+      
+      // Current month days
+      for (let i = 1; i <= daysInMonth; i++) {
+        days.push({
+          day: i,
+          currentMonth: true,
+          date: new Date(currentYear, currentMonth, i)
+        });
+      }
+      
+      // Next month days (to fill out the grid)
+      const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+      const nextDaysNeeded = totalCells - days.length;
+      
+      const nextMonth = currentMonth === 11 ? 0 : currentMonth + 1;
+      const nextYear = currentMonth === 11 ? currentYear + 1 : currentYear;
+      
+      for (let i = 1; i <= nextDaysNeeded; i++) {
+        days.push({
+          day: i,
+          currentMonth: false,
+          date: new Date(nextYear, nextMonth, i)
+        });
+      }
+      
+      // Create calendar rows
+      for (let i = 0; i < days.length; i += 7) {
+        const row = document.createElement('div');
+        row.className = 'calendar-row';
+        
+        // Create days in this row
+        for (let j = i; j < i + 7 && j < days.length; j++) {
+          const day = days[j];
+          const dayElement = document.createElement('div');
+          dayElement.className = 'calendar-day';
+          
+          const dateNumber = document.createElement('div');
+          dateNumber.className = day.currentMonth ? 'date-number current-month' : 'date-number other-month';
+          dateNumber.textContent = day.day;
+          
+          const addButton = document.createElement('button');
+          addButton.className = 'add-event';
+          addButton.textContent = '+';
+          addButton.setAttribute('data-date', formatDate(day.date));
+          addButton.addEventListener('click', () => {
+  // Navigate to create_event.html with date parameter
+         window.location.href = `create_event.html?date=${formatDate(day.date)}`;
+});
+          
+          dayElement.appendChild(dateNumber);
+          dayElement.appendChild(addButton);
+          
+          // Add events for this day
+          const dayEvents = getEventsForDay(day.date);
+          if (dayEvents.length > 0) {
+            const eventList = document.createElement('div');
+            eventList.className = 'event-list';
+            
+            dayEvents.forEach(event => {
+              const eventItem = document.createElement('div');
+              eventItem.className = 'event-item';
+              eventItem.textContent = event.title;
+              eventItem.addEventListener('click', (e) => {
+                // Stop propagation to avoid triggering parent elements' click events
+                e.stopPropagation();
+                openEventDetails(event);
+              });
+              eventList.appendChild(eventItem);
+            });
+            
+            dayElement.appendChild(eventList);
+          }
+          
+          calendarGrid.appendChild(dayElement);
+        }
+      }
+    }
+    
+    // Get events for a specific day
+    function getEventsForDay(date) {
+      const dayEvents = [];
+      
+      events.forEach(event => {
+        // Check for direct match
+        if (isSameDay(new Date(event.date), date)) {
+          dayEvents.push(event);
+        }
+        // Check for recurring events
+        else if (event.recurrence && event.recurrence.rule) {
+          const startDate = new Date(event.recurrence.startDate || event.date);
+          
+          if (date >= startDate) {
+            const rule = event.recurrence.rule;
+            
+            if (rule === 'daily') {
+              dayEvents.push(event);
+            }
+            else if (rule === 'weekly' && date.getDay() === startDate.getDay()) {
+              dayEvents.push(event);
+            }
+            else if (rule === 'monthly' && date.getDate() === startDate.getDate()) {
+              dayEvents.push(event);
+            }
+            else if (rule === 'yearly' && 
+                     date.getDate() === startDate.getDate() && 
+                     date.getMonth() === startDate.getMonth()) {
+              dayEvents.push(event);
+            }
+          }
+        }
+      });
+      
+      return dayEvents;
+    }
+    
+    // Navigation events
+    prevMonthButton.addEventListener('click', () => {
+      if (currentMonth === 0) {
+        currentMonth = 11;
+        currentYear--;
+      } else {
+        currentMonth--;
+      }
+      renderCalendar();
+    });
+    
+    nextMonthButton.addEventListener('click', () => {
+      if (currentMonth === 11) {
+        currentMonth = 0;
+        currentYear++;
+      } else {
+        currentMonth++;
+      }
+      renderCalendar();
+    });
+    
+    // Event modal functions
+    function openEventModal(date, event = null) {
+      selectedDate = date;
+      selectedEvent = event;
+      
+      const formattedDate = formatDate(date);
+      selectedDateInput.value = formattedDate;
+      eventDateInput.value = formattedDate;
+      
+      // If editing an existing event, populate the form
+      if (event) {
+        document.getElementById('event-title').value = event.title || '';
+        document.getElementById('event-description').value = event.description || '';
+        document.getElementById('event-start-time').value = event.startTime || '';
+        document.getElementById('event-end-time').value = event.endTime || '';
+        document.getElementById('event-reminder').value = event.reminderMinutes || '';
+        document.getElementById('event-invitees').value = event.invitees || '';
+        
+        // Set recurrence options
+        if (event.recurrence && event.recurrence.rule) {
+          document.getElementById('is-recurring').value = 'yes';
+          document.getElementById('recurrence-rule').value = event.recurrence.rule;
+          recurrenceOptions.style.display = 'block';
+        } else {
+          document.getElementById('is-recurring').value = 'no';
+          recurrenceOptions.style.display = 'none';
+        }
+      } else {
+        // Reset form for new event
+        eventForm.reset();
+        eventDateInput.value = formattedDate;
+        selectedDateInput.value = formattedDate;
+        recurrenceOptions.style.display = 'none';
+      }
+      
+      eventModal.style.display = 'flex';
+    }
+    
+    // Open event details modal
+    function openEventDetails(event) {
+      selectedEvent = event;
+      
+      // Populate event details
+      let detailsHTML = `
+        <p><span class="event-detail-label">Title:</span> ${event.title}</p>
+        <p><span class="event-detail-label">Date:</span> ${formatDate(new Date(event.date))}</p>
+        <p><span class="event-detail-label">Time:</span> ${event.startTime || 'Not specified'} - ${event.endTime || 'Not specified'}</p>
+      `;
+      
+      if (event.description) {
+        detailsHTML += `<p><span class="event-detail-label">Description:</span> ${event.description}</p>`;
+      }
+      
+      if (event.reminderMinutes) {
+        detailsHTML += `<p><span class="event-detail-label">Reminder:</span> ${event.reminderMinutes} minutes before</p>`;
+      }
+      
+      if (event.recurrence && event.recurrence.rule) {
+        detailsHTML += `<p><span class="event-detail-label">Recurrence:</span> ${event.recurrence.rule}</p>`;
+      }
+      
+      if (event.invitees) {
+        detailsHTML += `<p><span class="event-detail-label">Invitees:</span> ${event.invitees}</p>`;
+      }
+      
+      eventDetailsElement.innerHTML = detailsHTML;
+      eventDetailsModal.style.display = 'flex';
+    }
+    
+    closeModalButton.addEventListener('click', () => {
+      eventModal.style.display = 'none';
+    });
+    
+    closeDetailsModalButton.addEventListener('click', () => {
+      eventDetailsModal.style.display = 'none';
+    });
+    
+    // Close modals if clicking outside content
+    eventModal.addEventListener('click', (e) => {
+      if (e.target === eventModal) {
+        eventModal.style.display = 'none';
+      }
+    });
+    
+    eventDetailsModal.addEventListener('click', (e) => {
+      if (e.target === eventDetailsModal) {
+        eventDetailsModal.style.display = 'none';
+      }
+    });
+    
+    // Event form submission
+    eventForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const eventData = {
+        id: selectedEvent ? selectedEvent.id : Date.now().toString(),
+        title: document.getElementById('event-title').value,
+        description: document.getElementById('event-description').value,
+        date: new Date(document.getElementById('event-date-input').value),
+        startTime: document.getElementById('event-start-time').value,
+        endTime: document.getElementById('event-end-time').value,
+        reminderMinutes: document.getElementById('event-reminder').value,
+        invitees: document.getElementById('event-invitees').value
+      };
+      
+      // Add recurrence info if selected
+      if (document.getElementById('is-recurring').value === 'yes') {
+        eventData.recurrence = {
+          rule: document.getElementById('recurrence-rule').value,
+          startDate: new Date(document.getElementById('event-date-input').value)
+        };
+      }
+      
+      // If editing an existing event, update it
+      if (selectedEvent) {
+        const eventIndex = events.findIndex(e => e.id === selectedEvent.id);
+        if (eventIndex !== -1) {
+          events[eventIndex] = eventData;
+        }
+      } else {
+        // Otherwise add new event
+        events.push(eventData);
+      }
+      
+      // Save events and close modal
+      saveEvents();
+      eventModal.style.display = 'none';
+      
+      // Re-render calendar to show new/updated event
+      renderCalendar();
+      
+      // Simulate form submission to create_event.html
+      // In a real implementation, you would use fetch or XMLHttpRequest
+      console.log('Event data submitted:', eventData);
+    });
+    
+    // Edit event button
+    editEventButton.addEventListener('click', () => {
+      if (selectedEvent) {
+        eventDetailsModal.style.display = 'none';
+        openEventModal(new Date(selectedEvent.date), selectedEvent);
+      }
+    });
+    
+    // Delete event button
+ deleteEventButton.addEventListener('click', () => {
+  if (selectedEvent) {
+    // Redirect to delete_event.php with the event ID as a parameter
+    window.location.href = `delete_event.php?id=${selectedEvent.id}`;
+    eventDetailsModal.style.display = 'none';
+  }
+});
+    
+    // Toggle recurrence options
+    isRecurringSelect.addEventListener('change', function() {
+      recurrenceOptions.style.display = this.value === 'yes' ? 'block' : 'none';
+    });
+    
+    // Time format handling
+    window.addEventListener('DOMContentLoaded', () => {
+      const timeFormat = localStorage.getItem("time_format");
+      const ampmWrapper = document.getElementById("ampm-wrapper");
+
+      if (timeFormat === "24") {
+        ampmWrapper.style.display = "none";  // hide AM/PM
+      } else {
+        ampmWrapper.style.display = "block"; // show AM/PM
+      }
+      
+      // Load events and render calendar
+      loadEvents();
+      renderCalendar();
+    });
+    
+    // Check for events from create_event.html via URL parameters
+    function checkForEventParameters() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('title')) {
+        const eventData = {
+          id: Date.now().toString(),
+          title: urlParams.get('title'),
+          description: urlParams.get('description') || '',
+          date: new Date(urlParams.get('event_date')),
+          startTime: urlParams.get('start_time') || '',
+          endTime: urlParams.get('end_time') || '',
+          reminderMinutes: urlParams.get('reminder_minutes_before') || '',
+          invitees: urlParams.get('invitees') || ''
+        };
+        
+        if (urlParams.get('is_recurring') === 'yes') {
+          eventData.recurrence = {
+            rule: urlParams.get('recurrence_rule'),
+            startDate: new Date(urlParams.get('event_date'))
+          };
+        }
+        
+        events.push(eventData);
+        saveEvents();
+        renderCalendar();
+        
+        // Clear URL parameters after processing
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+    
+    // Check for URL parameters when page loads
+    window.addEventListener('load', checkForEventParameters);
+    
+    // Initialize calendar
+    renderCalendar();
+ 
+  
+  </script>
+</body>
+</html>

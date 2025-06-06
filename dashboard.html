@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kronos | My Day</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a2d9d5c56d.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      display: flex;
+      background: linear-gradient(to bottom right, #822ea8, #ffffff);
+      color: #333;
+      animation: fadeInBody 1s ease-in;
+    }
+
+    @keyframes fadeInBody {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .sidebar {
+      width: 220px;
+      background-color: rgba(255, 255, 255, 0.85);
+      border-right: 1px solid #ddd;
+      height: 100vh;
+      padding: 25px 15px;
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+      animation: slideInLeft 1s ease;
+    }
+
+    @keyframes slideInLeft {
+      from { transform: translateX(-30px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .sidebar h2 {
+      font-size: 20px;
+      margin-bottom: 25px;
+      color: #6a1b9a;
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+
+    .sidebar ul li {
+      display: flex;
+      align-items: center;
+      margin: 18px 0;
+      cursor: pointer;
+      padding: 10px 12px;
+      border-radius: 8px;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .sidebar ul li:hover {
+      background-color: #f0e5ff;
+      transform: translateX(5px);
+    }
+
+    .sidebar ul li i {
+      margin-right: 10px;
+      color: #822ea8;
+    }
+
+    .main {
+      flex: 1;
+      padding: 30px 50px;
+      animation: fadeInMain 1.2s ease;
+    }
+
+    @keyframes fadeInMain {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .main-header {
+      margin-bottom: 30px;
+    }
+
+    .main-header h1 {
+      font-size: 26px;
+      color: #3c1361;
+    }
+
+    .event-section {
+      margin-top: 10px;
+    }
+
+    .note {
+      background-color: #fff0e5;
+      padding: 12px;
+      border: 1px solid #f5c39b;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      animation: fadeInNote 1s ease;
+    }
+
+    @keyframes fadeInNote {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .note a {
+      color: #000;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    .add-btn {
+      margin-top: 15px;
+      padding: 12px 24px;
+      background-color: #6a1b9a;
+      color: white;
+      font-weight: 500;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .add-btn:hover {
+      background-color: #4a0072;
+      transform: scale(1.05);
+    }
+
+    .preview {
+      margin-top: 30px;
+      background-color: #822ea8;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      animation: fadeInUp 1s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .preview h3 {
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+
+    .powered {
+      text-align: right;
+      font-size: 12px;
+      color: #eee;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>📅 Kronos</h2>
+    <ul>
+      <li onclick="location.href='my_events.php'"><i class="fas fa-calendar-alt"></i> My Events</li>
+      <li><i class="fas fa-paint-brush"></i><a href="design.html" style="color: inherit; text-decoration: none;">Design</a></li>
+      <li><i class="fas fa-cog"></i> <a href="settings.html" style="color: inherit; text-decoration: none;">Settings</a></li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+    <div class="main-header">
+      <h1>Events</h1>
+    </div>
+
+    <div class="event-section">
+      <p>You haven't added any events to your calendar yet.</p>
+      <button class="add-btn" onclick="location.href='create_event.html'">+ Add Your First Event</button>
+      <div class="preview">
+        <h3>Upcoming Events</h3>
+        <ul id="event-list" style="list-style: none; padding-left: 0;"></ul>
+      </div>
+
+      <div class="preview" style="margin-top: 20px; background-color: #6a1b9a;">
+        <h3>Notifications</h3>
+        <ul id="notif-list" style="list-style: none; padding-left: 0;"></ul>
+      </div>
+
+      <p class="powered">Powered by EventsCalendar.co</p>
+    </div>
+  </div>
+
+  <script>
+    fetch('get_data.php')
+      .then(response => response.json())
+      .then(data => {
+        const eventList = document.getElementById('event-list');
+        const notifList = document.getElementById('notif-list');
+
+        eventList.innerHTML = '';
+        notifList.innerHTML = '';
+
+        if (data.events.length === 0) {
+          eventList.innerHTML = '<li>No upcoming events</li>';
+        } else {
+          data.events.forEach(event => {
+            const li = document.createElement('li');
+            li.textContent = ${event.title} on ${event.event_date};
+            li.style.padding = '6px 0';
+            eventList.appendChild(li);
+          });
+        }
+
+        if (data.notifications.length === 0) {
+          notifList.innerHTML = '<li>No notifications</li>';
+        } else {
+          data.notifications.forEach(note => {
+            const li = document.createElement('li');
+            li.textContent = note.message;
+            li.style.padding = '6px 0';
+            notifList.appendChild(li);
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        document.getElementById('event-list').innerHTML = '<li>Error loading events</li>';
+        document.getElementById('notif-list').innerHTML = '<li>Error loading notifications</li>';
+      });
+  </script>
+</body>
+</html>

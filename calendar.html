@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>White Calendar - Kronos</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f7f7f7;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .calendar {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      width: 350px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .calendar-header button {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #822ea8;
+    }
+
+    .calendar-header span {
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      color: #555;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .dates {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    .date {
+      padding: 10px 0;
+      border-radius: 6px;
+      background-color: #fff;
+      color: #333;
+      transition: background-color 0.2s;
+    }
+
+    .date:hover {
+      background-color: #f1e9ff;
+      cursor: pointer;
+    }
+
+    .today {
+      background-color: #822ea8;
+      color: white;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Kronos Calendar</h1>
+
+  <div class="calendar">
+    <div class="calendar-header">
+      <button onclick="prevMonth()">&lt;</button>
+      <span id="monthYear"></span>
+      <button onclick="nextMonth()">&gt;</button>
+    </div>
+
+    <div class="days">
+      <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+    </div>
+
+    <div class="dates" id="dates"></div>
+  </div>
+
+  <script>
+    const datesEl = document.getElementById("dates");
+    const monthYear = document.getElementById("monthYear");
+    const date = new Date();
+
+    let currentMonth = date.getMonth();
+    let currentYear = date.getFullYear();
+
+    function renderCalendar(month, year) {
+      const firstDay = new Date(year, month, 1).getDay();
+      const lastDate = new Date(year, month + 1, 0).getDate();
+
+      datesEl.innerHTML = "";
+
+      monthYear.innerText = ${date.toLocaleString('default', { month: 'long' })} ${year};
+
+      // Add empty boxes before the 1st day
+      for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement("div");
+        datesEl.appendChild(empty);
+      }

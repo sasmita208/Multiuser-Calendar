@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Event</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #6a1b9a, #ffffff);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+
+    form {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      width: 360px;
+      color: #333;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      color: #6a1b9a;
+      font-size: 1.5rem;
+    }
+
+    label {
+      margin-top: 10px;
+      display: block;
+      font-size: 0.9rem;
+      color: #444;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 6px 8px;
+      margin-top: 5px;
+      font-size: 0.85rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #f9f9f9;
+      color: #000;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #6a1b9a;
+      color: #fff;
+      font-weight: bold;
+      margin-top: 20px;
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      transition: background 0.3s;
+      font-size: 0.95rem;
+    }
+
+    button:hover {
+      background: #4a0072;
+    }
+
+    .recurrence-options {
+      display: none;
+      margin-top: 10px;
+    }
+
+    select {
+      margin-bottom: 10px;
+    }
+    
+    .time-format-selector {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+      margin-bottom: 10px;
+      padding: 5px;
+      background: #f0f0f0;
+      border-radius: 6px;
+    }
+    
+    .time-format-selector label {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .time-format-selector input[type="radio"] {
+      width: auto;
+      margin: 0 5px 0 0;
+    }
+    
+    .time-input-12h, .time-input-24h {
+      margin-top: 10px;
+    }
+    
+    .time-input-wrapper {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    
+    .time-input-wrapper input {
+      flex: 2;
+    }
+    
+    .time-input-wrapper select {
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+  <form action="create_event.php" method="post">
+    <h2>Create New Event</h2>
+
+    <label>Event Title:</label>
+    <input type="text" name="title" placeholder="Event Title" required>
+
+    <label>Description:</label>
+    <input type="text" name="description" placeholder="Description">
+
+    <label>Date:</label>
+    <input type="date" name="event_date" required>
+    
+    <div class="time-format-selector">
+      <label>
+        <input type="radio" name="time_format" value="12" checked> 12-hour
+      </label>
+      <label>
+        <input type="radio" name="time_format" value="24"> 24-hour
+      </label>
+    </div>
+
+    <div class="time-input-12h">
+      <label>Start Time:</label>
+      <div class="time-input-wrapper">
+        <input type="text" name="start_time_12h" placeholder="hh:mm" pattern="(0?[1-9]|1[0-2]):[0-5][0-9]" required>
+        <select name="start_ampm">
+          <option value="AM">AM</option>
+          <option value="PM">PM</option>
+        </select>
+      </div>
+
+      <label>End Time:</label>
+      <div class="time-input-wrapper">
+        <input type="text" name="end_time_12h" placeholder="hh:mm" pattern="(0?[1-9]|1[0-2]):[0-5][0-9]" required>
+        <select name="end_ampm">
+          <option value="AM">AM</option>
+          <option value="PM">PM</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="time-input-24h" style="display: none;">
+      <label>Start Time:</label>
+      <input type="text" name="start_time_24h" placeholder="00:00 - 23:59" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]">
+      
+      <label>End Time:</label>
+      <input type="text" name="end_time_24h" placeholder="00:00 - 23:59" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]">
+    </div>
+
+    <label>Reminder (minutes before):</label>
+    <input type="number" name="reminder_minutes_before" placeholder="e.g. 15" min="0">
+
+    <label>Is this event recurring?</label>
+    <select name="is_recurring" onchange="toggleRecurrence(this.value)">
+      <option value="no">No</option>
+      <option value="yes">Yes</option>
+    </select>
+
+    <div class="recurrence-options" id="recurrence-options">
+      <label>Recurrence Rule:</label>
+      <select name="recurrence_rule">
+        <option value="daily">Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+        <option value="yearly">Yearly</option>
+      </select>
+    </div>
+
+    <label>Invite Users (comma-separated emails):</label>
+    <input type="text" name="invitees" placeholder="user1@example.com, user2@example.com">
+
+    <button type="submit">Create Event</button>
+  </form>
+
+  <script>
+    // Toggle recurrence options
+    function toggleRecurrence(value) {
+      const options = document.getElementById('recurrence-options');
+      options.style.display = value === "yes" ? 'block' : 'none';
+    }
+    
+    // Handle time format toggle
+    document.addEventListener('DOMContentLoaded', () => {
+      const timeFormatRadios = document.querySelectorAll('input[name="time_format"]');
+      const timeInput12h = document.querySelector('.time-input-12h');
+      const timeInput24h = document.querySelector('.time-input-24h');
+      
+      // Load saved preference if exists
+      const savedFormat = localStorage.getItem("time_format");
+      if (savedFormat) {
+        document.querySelector(`input[name="time_format"][value="${savedFormat}"]`).checked = true;
+        updateTimeInputDisplay(savedFormat);
+      }
+      
+      // Add event listeners to radio buttons
+      timeFormatRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          const format = e.target.value;
+          updateTimeInputDisplay(format);
+          
+          // Save preference to localStorage
+          localStorage.setItem("time_format", format);
+        });
+      });
+      
+      function updateTimeInputDisplay(format) {
+        if (format === "24") {
+          timeInput12h.style.display = "none";
+          timeInput24h.style.display = "block";
+          document.querySelector('input[name="start_time_24h"]').setAttribute('required', '');
+          document.querySelector('input[name="end_time_24h"]').setAttribute('required', '');
+          document.querySelector('input[name="start_time_12h"]').removeAttribute('required');
+          document.querySelector('input[name="end_time_12h"]').removeAttribute('required');
+        } else {
+          timeInput12h.style.display = "block";
+          timeInput24h.style.display = "none";
+          document.querySelector('input[name="start_time_12h"]').setAttribute('required', '');
+          document.querySelector('input[name="end_time_12h"]').setAttribute('required', '');
+          document.querySelector('input[name="start_time_24h"]').removeAttribute('required');
+          document.querySelector('input[name="end_time_24h"]').removeAttribute('required');
+        }
+      }
+      
+      // Add time validation
+      const timeInputs12h = document.querySelectorAll('input[name="start_time_12h"], input[name="end_time_12h"]');
+      timeInputs12h.forEach(input => {
+        input.addEventListener('blur', function() {
+          const pattern = /(0?[1-9]|1[0-2]):[0-5][0-9]/;
+          if (!pattern.test(this.value) && this.value !== '') {
+            alert('Please enter time in 12-hour format (1:00 - 12:59)');
+          }
+        });
+      });
+      
+      const timeInputs24h = document.querySelectorAll('input[name="start_time_24h"], input[name="end_time_24h"]');
+      timeInputs24h.forEach(input => {
+        input.addEventListener('blur', function() {
+          const pattern = /([01]?[0-9]|2[0-3]):[0-5][0-9]/;
+          if (!pattern.test(this.value) && this.value !== '') {
+            alert('Please enter time in 24-hour format (00:00 - 23:59)');
+          }
+        });
+      });
+      
+      // Handle form submission to consolidate time fields
+      const form = document.querySelector('form');
+      form.addEventListener('submit', (e) => {
+        const format = document.querySelector('input[name="time_format"]:checked').value;
+        
+        // Create hidden input to pass the selected format
+        const formatInput = document.createElement('input');
+        formatInput.type = 'hidden';
+        formatInput.name = 'selected_time_format';
+        formatInput.value = format;
+        form.appendChild(formatInput);
+      });
+    });
+  </script>
+</body>
+</html>
