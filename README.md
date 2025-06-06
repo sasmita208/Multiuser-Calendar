@@ -1,4 +1,4 @@
-#  Multiuser Calendar (PHP + HTML)
+#  Kronos Multiuser Calendar 
 
 A simple multiuser calendar web application built using PHP and HTML. Users can register, log in, and manage personal events on their calendar.
 
