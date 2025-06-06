@@ -35,4 +35,4 @@ A simple multiuser calendar web application built using PHP and HTML. Users can 
 
 1. **Clone this repository**
 ```bash
-git clone https://github.com/yourusername/multiuser-calendar.git
+git clone https://github.com/sasmita208/Multiuser-Calendar.git
