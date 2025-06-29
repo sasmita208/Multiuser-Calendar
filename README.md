@@ -20,15 +20,15 @@ A simple multiuser calendar web application built using PHP and HTML. Users can 
 |------------|--------|
 | **Frontend** | HTML, CSS, JavaScript |
 | **Backend**  | PHP |
-| **Database** | MySQL (via phpMyAdmin or XAMPP) |
+| **Database** | MySQL (via XAMPP) |
 
 ---
 
 ## Setup Instructions
 
 ###  Requirements
-- PHP (e.g., via XAMPP, WAMP, or LAMP)
-- MySQL or MariaDB
+- PHP 
+- MySQL
 - Web browser
 
 ### Installation Steps
